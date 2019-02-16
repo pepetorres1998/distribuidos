@@ -2,14 +2,24 @@ package entero_factorial;
 
 import java.math.BigInteger;
 //import java.util.Arrays;
+import java.util.Formatter;
 
 public class EnteroFactorial {
 	private int integer;
 	private int threads;
 	private BigInteger result;
 	private long time;
+	private String file_path = "./result.txt";
 	
 	public EnteroFactorial(){}
+	
+	public EnteroFactorial(int i, int j, String k)
+	{
+		this.integer = i;
+		this.threads = j;
+		this.file_path = k;
+		this.result = this.Concurrent();
+	}
 	
 	public EnteroFactorial(int i, int j)
 	{
@@ -80,6 +90,21 @@ public class EnteroFactorial {
 		long b = System.currentTimeMillis();
 		time = b-a;
 		return sum;
+	}
+	
+	public void toText()
+	{
+		try {
+			Formatter f = new Formatter(file_path);
+			//System.out.println(f.out());
+			f.format("Result: %s\n"
+					+ "Threads: %s\n"
+					+ "Factorial: %s\n"
+					+ "Time: %s", result, threads, integer, time);
+			f.close();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	//Setters and getters
