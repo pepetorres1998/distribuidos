@@ -30,4 +30,11 @@ public class Parallel extends Thread {
 	{
 		return bigint;
 	}
+	
+	public String toString()
+	{
+		return "\n"+bigint.toString()+
+				"\nInicio: "+begin+
+				"\nFin: "+end;
+	}
 }
