@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class TxtReader {
 	private String fileName;
@@ -37,5 +38,27 @@ public class TxtReader {
 			System.out.println(line);
 		}
 		br.close();
+	}
+	
+	public ArrayList<Node> assignReader() throws IOException
+	{
+		BufferedReader br = readData();
+		String line;
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		
+		int i = 0;
+		while((line = br.readLine()) != null)
+		{
+			if(i == 0)
+			{
+				System.out.println("Primera linea");
+			}
+			else
+			{
+				nodes.add(new Node(line, i));
+			}
+			i++;
+		}
+		return nodes;
 	}
 }
