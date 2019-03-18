@@ -1,10 +1,10 @@
 import java.util.StringTokenizer;
 
 public class Node {
-	private int id;
-	private double value;
-	private double x;
-	private double y;
+	public int id;
+	public double value;
+	public double x;
+	public double y;
 	
 	public Node(double x, double y, double value, int id)
 	{
