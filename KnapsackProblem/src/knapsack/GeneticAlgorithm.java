@@ -1,6 +1,9 @@
 package knapsack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgorithm {
@@ -20,10 +23,18 @@ public class GeneticAlgorithm {
 		ArrayList<String> poblations = new ArrayList<String>();
 		for (int i = 0; i < nPoblations; i++) {
 			Random rg = new Random();
-		    int n = rg.nextInt((int) Math.pow(2, g.Items));
-		    poblations.add(
-		    		String.format("%"+g.Items+"s", Integer.toBinaryString(n))
-		    		.replace(' ', '0'));
+		    int n = rg.nextInt((int) Math.pow(2, 31)); //generate random integer
+		    String[] formated = String.format("%"+g.Items+"s", Integer.toBinaryString(n))
+		    		.replace(' ', '0').split("");
+		    List<String> formated2 = Arrays.asList(formated);
+		    
+		    Collections.shuffle(formated2);
+		    StringBuilder sb = new StringBuilder(formated.length);
+		    for (String c : formated2) {
+				sb.append(c);
+			}
+		    
+		    poblations.add(sb.toString());
 		}
 		return poblations; 
 	}
