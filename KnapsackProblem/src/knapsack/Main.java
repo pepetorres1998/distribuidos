@@ -8,11 +8,19 @@ public class Main {
 		System.out.println("Weigths: " + g.Weights);
 		System.out.println("Categories: " + g.Categories);
 		System.out.println("Max weight: " + g.W);
-		GeneticAlgorithm gen = new GeneticAlgorithm(g, 200);
+		GeneticAlgorithm gen = new GeneticAlgorithm(g, 200, 20);
+		gen.run();
+		try {
+			gen.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//System.out.println(gen.poblations);
 		//for (int i = 0; i < gen.poblations.size(); i++) {
 		//	System.out.println(gen.poblations.get(i));
 		//}
-		System.out.println(gen.weights);
+		//System.out.println(gen.weights);
+		System.out.println("MEJOR RESULTADO: " + gen.maxWeight + " DE VALOR");
 	}
 }

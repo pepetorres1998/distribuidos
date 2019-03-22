@@ -5,17 +5,30 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class GeneticAlgorithm {
+public class GeneticAlgorithm extends Thread{
 	private Generator g;
 	public ArrayList<String> poblations;
-	public ArrayList<Integer> weights;
+	public ArrayList<Double> weights;
+	public Double maxWeight;
+	public int iterations;
 	
-	public GeneticAlgorithm(Generator g, int nPoblations)
+	public GeneticAlgorithm(Generator g, int nPoblations, int iterations)
 	{
+		this.iterations = iterations;
+		this.maxWeight = (double) 0;
 		this.g = g;
 		this.poblations = generatePoblation(nPoblations);
 		this.weights = weightItems();
+	}
+	
+	public void run()
+	{
+		for (int i = 0; i < iterations; i++) {
+			poblations = giveNewGen();
+			weights = weightItems();
+		}
 	}
 	
 	private ArrayList<String> generatePoblation(int nPoblations)
@@ -45,9 +58,9 @@ public class GeneticAlgorithm {
 		
 	}
 	
-	private ArrayList<Integer> weightItems()
+	private ArrayList<Double> weightItems()
 	{
-		ArrayList<Integer> weights = new ArrayList<Integer>();
+		ArrayList<Double> weights = new ArrayList<Double>();
 		for (int i = 0; i < poblations.size(); i++) {
 			int total = 0, totalWeights = 0;
 			char[] binaryParsed = parseBinary(poblations.get(i));
@@ -59,14 +72,101 @@ public class GeneticAlgorithm {
 				}
 			}
 			if(totalWeights > g.W) {
-				weights.add(0);
+				weights.add((double) 0);
 			}
 			else {
-				weights.add(total);								
+				weights.add((double) total);								
 			}
+		}
+		if(Collections.max(weights) > maxWeight) {
+			maxWeight = Collections.max(weights);
 		}
 		return weights;
 	}
 	
-	//private 
+	public ArrayList<String> giveNewGen()
+	{
+		double sum = 0;
+		ArrayList<Double> probabilities = new ArrayList<Double>();
+		for (double weight : weights) {
+			if(weight != 0) {
+				sum += weight;
+			}
+		}
+		System.out.println(sum);
+		for (double weight : weights) {
+			if (weight != 0) {
+				probabilities.add(weight/sum);
+			} else {
+				probabilities.add((double) 1);
+			}
+		}
+		//System.out.println(probabilities);
+		//System.out.println(Math.random());
+		ArrayList<String> auxNewGen = new ArrayList<String>();
+		while(auxNewGen.size() < poblations.size()) {
+			double random = Math.random();
+			double auxSumProba = 0;
+			for (int i = 0; i < probabilities.size(); i++) {
+				if (probabilities.get(i) < 1.0) {
+					if (random < auxSumProba) {
+						auxNewGen.add(poblations.get(i));
+						break;
+					} else {
+						auxSumProba += probabilities.get(i);				
+					}
+				}
+			}
+		}
+		System.out.println(auxNewGen.size());
+		ArrayList<String> aux2NewGen = new ArrayList<String>();
+		for (int i = 0; i < auxNewGen.size(); i+=2) {
+			aux2NewGen.add(cutGen1(auxNewGen.get(i), auxNewGen.get(i+1)));
+			aux2NewGen.add(cutGen2(auxNewGen.get(i), auxNewGen.get(i+1)));
+		}
+		
+		ArrayList<String> newGen = new ArrayList<String>();
+		for (String aux2 : aux2NewGen) {
+			if(Math.random() > 0.1) {
+				int replace = new Random().nextInt(aux2.length());
+				StringBuilder string = new StringBuilder(aux2);
+				if (string.charAt(replace) == '1') {
+					string.setCharAt(replace, '0');
+					newGen.add(string.toString());
+				} else {
+					string.setCharAt(replace, '1');
+					newGen.add(string.toString());
+				}
+			} else {
+				newGen.add(aux2);
+			}
+		}
+		System.out.println(newGen.size());
+		System.out.println(newGen == poblations);
+		return newGen;
+	} //giveNewGen end
+	
+	public String cutGen1(String p1, String p2)
+	{
+		int position = ThreadLocalRandom.current().nextInt(1, p1.length());
+		String aux1P1 = p1.substring(0, position);
+		String aux2P1 = p1.substring(position);
+		String aux1P2 = p2.substring(0, position);
+		String aux2P2 = p2.substring(position);
+		p1 = aux1P1+aux2P2;
+		p2 = aux1P2+aux2P1;
+		return p1;
+	}
+	
+	public String cutGen2(String p1, String p2)
+	{
+		int position = ThreadLocalRandom.current().nextInt(1, p1.length());
+		String aux1P1 = p1.substring(0, position);
+		String aux2P1 = p1.substring(position);
+		String aux1P2 = p2.substring(0, position);
+		String aux2P2 = p2.substring(position);
+		p1 = aux1P1+aux2P2;
+		p2 = aux1P2+aux2P1;
+		return p2;
+	}
 }
