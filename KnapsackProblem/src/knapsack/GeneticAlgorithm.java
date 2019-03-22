@@ -93,7 +93,7 @@ public class GeneticAlgorithm extends Thread{
 				sum += weight;
 			}
 		}
-		System.out.println(sum);
+		//System.out.println(sum);
 		for (double weight : weights) {
 			if (weight != 0) {
 				probabilities.add(weight/sum);
@@ -118,7 +118,7 @@ public class GeneticAlgorithm extends Thread{
 				}
 			}
 		}
-		System.out.println(auxNewGen.size());
+		//System.out.println(auxNewGen.size());
 		ArrayList<String> aux2NewGen = new ArrayList<String>();
 		for (int i = 0; i < auxNewGen.size(); i+=2) {
 			aux2NewGen.add(cutGen1(auxNewGen.get(i), auxNewGen.get(i+1)));
@@ -141,8 +141,8 @@ public class GeneticAlgorithm extends Thread{
 				newGen.add(aux2);
 			}
 		}
-		System.out.println(newGen.size());
-		System.out.println(newGen == poblations);
+		//System.out.println(newGen.size());
+		//System.out.println(newGen == poblations);
 		return newGen;
 	} //giveNewGen end
 	
